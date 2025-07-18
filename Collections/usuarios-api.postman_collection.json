@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "usuarios-api-collection",
+		"name": "Usuários API",
+		"description": "Endpoints para gerenciamento de usuários com validação zod e controle de acesso por papéis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Usuário",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tenant_id\": \"uuid_do_tenant\",\n  \"loja_id\": \"uuid_da_loja\",\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@example.com\",\n  \"senha\": \"123456\",\n  \"papel_id\": \"uuid_do_papel\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/usuarios",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "Cria um novo usuário. Requer permissão: admin_global, admin_tenant, gerente_regional ou gerente. tenant_id é opcional para admin_global."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Usuário por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/usuarios/{{usuario_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"usuarios",
+						"{{usuario_id}}"
+					]
+				},
+				"description": "Busca um usuário específico por ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todos Usuários",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/usuarios",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				},
+				"description": "Lista todos os usuários do sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Usuário",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"email\": \"joao.novo@example.com\",\n  \"senha\": \"nova123\",\n  \"papel_id\": \"uuid_do_papel\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/usuarios/{{usuario_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"usuarios",
+						"{{usuario_id}}"
+					]
+				},
+				"description": "Atualiza um usuário. Permissão: próprio usuário OU admin_global, admin_tenant, gerente_regional, gerente"
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Usuário",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/usuarios/{{usuario_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"usuarios",
+						"{{usuario_id}}"
+					]
+				},
+				"description": "Remove um usuário do sistema"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "seu_jwt_token_aqui",
+			"type": "string"
+		},
+		{
+			"key": "usuario_id",
+			"value": "uuid_do_usuario",
+			"type": "string"
+		}
+	]
+} 

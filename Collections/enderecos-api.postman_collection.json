@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "enderecos-api-collection",
+		"name": "Endereços API",
+		"description": "Endpoints para gerenciamento de endereços com validação zod e controle de acesso",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Endereço",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"logradouro\": \"Rua das Flores\",\n  \"numero\": \"123\",\n  \"complemento\": \"Apto 45\",\n  \"bairro\": \"Centro\",\n  \"cidade\": \"São Paulo\",\n  \"uf\": \"SP\",\n  \"cep\": \"01234567\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/enderecos",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"enderecos"
+					]
+				},
+				"description": "Cria um novo endereço"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Endereço por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/enderecos/{{endereco_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"enderecos",
+						"{{endereco_id}}"
+					]
+				},
+				"description": "Busca um endereço específico por ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todos Endereços",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/enderecos",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"enderecos"
+					]
+				},
+				"description": "Lista todos os endereços do sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Endereço",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"logradouro\": \"Avenida Paulista\",\n  \"numero\": \"1000\",\n  \"complemento\": \"Sala 101\",\n  \"bairro\": \"Bela Vista\",\n  \"cidade\": \"São Paulo\",\n  \"uf\": \"SP\",\n  \"cep\": \"01310100\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/enderecos/{{endereco_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"enderecos",
+						"{{endereco_id}}"
+					]
+				},
+				"description": "Atualiza um endereço. Requer permissão: admin_global, admin_tenant ou gerente_regional"
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Endereço",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/enderecos/{{endereco_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"enderecos",
+						"{{endereco_id}}"
+					]
+				},
+				"description": "Remove um endereço do sistema"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "seu_jwt_token_aqui",
+			"type": "string"
+		},
+		{
+			"key": "endereco_id",
+			"value": "uuid_do_endereco",
+			"type": "string"
+		}
+	]
+} 

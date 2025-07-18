@@ -1,0 +1,104 @@
+{
+  "info": {
+    "_postman_id": "tenant-collection-001",
+    "name": "Tenant API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção de endpoints para gestão de tenants, incluindo cadastro completo com endereço e sócios."
+  },
+  "item": [
+    {
+      "name": "Criar Tenant (com endereço e sócios)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"razao_social\": \"Empresa Exemplo Ltda\",\n  \"nome_fantasia\": \"Exemplo\",\n  \"cnpj_matriz\": \"12345678000199\",\n  \"inscricao_estadual\": \"123456789\",\n  \"regime_tributario\": \"Simples Nacional\",\n  \"endereco\": {\n    \"logradouro\": \"Rua das Flores\",\n    \"numero\": \"100\",\n    \"complemento\": \"Sala 10\",\n    \"bairro\": \"Centro\",\n    \"cidade\": \"São Paulo\",\n    \"uf\": \"SP\",\n    \"cep\": \"01001000\"\n  },\n  \"socios\": [\n    {\n      \"nome\": \"João Majoritário\",\n      \"cpf\": \"12345678901\",\n      \"email\": \"joao@exemplo.com\",\n      \"is_dono\": true,\n      \"participacao\": 80\n    },\n    {\n      \"nome\": \"Maria Minoritária\",\n      \"cpf\": \"98765432100\",\n      \"email\": \"maria@exemplo.com\",\n      \"is_dono\": false,\n      \"participacao\": 20\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/tenants",
+          "host": ["{{base_url}}"],
+          "path": ["tenants"]
+        }
+      },
+      "response": [
+        {
+          "code": 201,
+          "name": "Tenant criado com sucesso",
+          "body": "{\n  \"tenant\": { ... },\n  \"endereco\": { ... },\n  \"socios\": [ ... ]\n}",
+          "header": [
+            { "key": "Content-Type", "value": "application/json" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Listar Tenants",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tenants",
+          "host": ["{{base_url}}"],
+          "path": ["tenants"]
+        }
+      }
+    },
+    {
+      "name": "Buscar Tenant por ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tenants/:id",
+          "host": ["{{base_url}}"],
+          "path": ["tenants", ":id"]
+        }
+      }
+    },
+    {
+      "name": "Atualizar Tenant",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"razao_social\": \"Novo Nome Ltda\",\n  \"nome_fantasia\": \"Novo Fantasia\",\n  \"cnpj_matriz\": \"12345678000199\",\n  \"inscricao_estadual\": \"987654321\",\n  \"regime_tributario\": \"Lucro Presumido\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/tenants/:id",
+          "host": ["{{base_url}}"],
+          "path": ["tenants", ":id"]
+        }
+      }
+    },
+    {
+      "name": "Deletar Tenant",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{jwt_token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/tenants/:id",
+          "host": ["{{base_url}}"],
+          "path": ["tenants", ":id"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "jwt_token", "value": "" }
+  ]
+} 

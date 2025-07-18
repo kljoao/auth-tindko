@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "lojas-api-collection",
+		"name": "Lojas API",
+		"description": "Endpoints para gerenciamento de lojas com validação zod e regras de negócio",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Loja",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tenant_id\": \"uuid_do_tenant\",\n  \"nome\": \"Loja Centro\",\n  \"cnpj\": \"12345678901234\",\n  \"responsavel_id\": \"uuid_do_responsavel\",\n  \"endereco_id\": \"uuid_do_endereco\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/lojas",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"lojas"
+					]
+				},
+				"description": "Cria uma nova loja. Regra: endereço deve ser único (não pode ser usado por outra loja)"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Loja por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/lojas/{{loja_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"lojas",
+						"{{loja_id}}"
+					]
+				},
+				"description": "Busca uma loja específica por ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todas Lojas",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/lojas",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"lojas"
+					]
+				},
+				"description": "Lista todas as lojas do sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Loja",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Loja Centro Atualizada\",\n  \"cnpj\": \"12345678901234\",\n  \"responsavel_id\": \"uuid_do_novo_responsavel\",\n  \"endereco_id\": \"uuid_do_novo_endereco\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/lojas/{{loja_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"lojas",
+						"{{loja_id}}"
+					]
+				},
+				"description": "Atualiza uma loja. Regra: novo endereço deve ser único"
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Loja",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/lojas/{{loja_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"lojas",
+						"{{loja_id}}"
+					]
+				},
+				"description": "Remove uma loja do sistema"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "seu_jwt_token_aqui",
+			"type": "string"
+		},
+		{
+			"key": "loja_id",
+			"value": "uuid_da_loja",
+			"type": "string"
+		}
+	]
+} 

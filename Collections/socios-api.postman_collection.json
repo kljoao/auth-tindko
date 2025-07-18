@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "socios-api-collection",
+		"name": "Sócios API",
+		"description": "Endpoints para gerenciamento de sócios com validação zod",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Sócio",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tenant_id\": \"uuid_do_tenant\",\n  \"nome\": \"João Silva\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"joao@example.com\",\n  \"is_dono\": false\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/socios",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"socios"
+					]
+				},
+				"description": "Cria um novo sócio"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Sócio por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/socios/{{socio_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"socios",
+						"{{socio_id}}"
+					]
+				},
+				"description": "Busca um sócio específico por ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todos Sócios",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/socios",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"socios"
+					]
+				},
+				"description": "Lista todos os sócios do sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Sócio",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"email\": \"joao.novo@example.com\",\n  \"is_dono\": true\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/socios/{{socio_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"socios",
+						"{{socio_id}}"
+					]
+				},
+				"description": "Atualiza um sócio"
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Sócio",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/socios/{{socio_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"socios",
+						"{{socio_id}}"
+					]
+				},
+				"description": "Remove um sócio do sistema"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "seu_jwt_token_aqui",
+			"type": "string"
+		},
+		{
+			"key": "socio_id",
+			"value": "uuid_do_socio",
+			"type": "string"
+		}
+	]
+} 

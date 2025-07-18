@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "tenant-api-collection",
+		"name": "Tenant API",
+		"description": "Endpoints para gerenciamento de tenants (franquias) com controle de acesso por papéis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Tenant",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"razao_social\": \"Empresa LTDA\",\n  \"cnpj_matriz\": \"12345678901234\",\n  \"endereco_id\": \"uuid_do_endereco\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/tenants",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tenants"
+					]
+				},
+				"description": "Cria um novo tenant. Requer permissão: admin_global"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Tenant por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/tenants/{{tenant_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tenants",
+						"{{tenant_id}}"
+					]
+				},
+				"description": "Busca um tenant específico por ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todos Tenants",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/tenants",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tenants"
+					]
+				},
+				"description": "Lista todos os tenants do sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Tenant",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"razao_social\": \"Empresa Atualizada LTDA\",\n  \"cnpj_matriz\": \"12345678901234\",\n  \"endereco_id\": \"uuid_do_novo_endereco\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/tenants/{{tenant_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tenants",
+						"{{tenant_id}}"
+					]
+				},
+				"description": "Atualiza um tenant. Requer permissão: admin_global ou admin_tenant"
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Tenant",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/tenants/{{tenant_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"tenants",
+						"{{tenant_id}}"
+					]
+				},
+				"description": "Remove um tenant. Requer permissão: admin_global ou admin_tenant"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "seu_jwt_token_aqui",
+			"type": "string"
+		},
+		{
+			"key": "tenant_id",
+			"value": "uuid_do_tenant",
+			"type": "string"
+		}
+	]
+} 

@@ -1,0 +1,143 @@
+// schema.prisma gerado a partir do modelo SQL fornecido
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model enderecos {
+  id            String    @id @default(uuid()) @db.Uuid
+  logradouro    String    @db.VarChar(255)
+  numero        String    @db.VarChar(20)
+  complemento   String?   @db.VarChar(100)
+  bairro        String    @db.VarChar(100)
+  cidade        String    @db.VarChar(100)
+  uf            String    @db.Char(2)
+  cep           String    @db.Char(8)
+  criado_em     DateTime  @default(now())
+  atualizado_em DateTime  @default(now())
+  tenants       tenants[]
+  lojas         lojas[]
+}
+
+model tenants {
+  id            String     @id @default(uuid()) @db.Uuid
+  razao_social  String     @db.VarChar(255)
+  nome_fantasia String?    @db.VarChar(255)
+  cnpj_matriz   String     @unique @db.Char(14)
+  inscricao_estadual String? @db.VarChar(50)
+  regime_tributario  String? @db.VarChar(50)
+  endereco_id   String     @db.Uuid
+  criado_em     DateTime   @default(now())
+  atualizado_em DateTime   @default(now())
+  endereco      enderecos  @relation(fields: [endereco_id], references: [id])
+  socios        socios[]
+  usuarios      usuarios[]
+  lojas         lojas[]
+}
+
+model socios {
+  id            String   @id @default(uuid()) @db.Uuid
+  tenant_id     String   @db.Uuid
+  nome          String   @db.VarChar(255)
+  cpf           String   @db.Char(11)
+  email         String   @db.VarChar(255)
+  is_dono       Boolean  @default(false)
+  participacao  Decimal? @db.Decimal(5,2) // novo campo
+  criado_em     DateTime @default(now())
+  atualizado_em DateTime @default(now())
+  tenant        tenants  @relation(fields: [tenant_id], references: [id])
+
+  @@unique([tenant_id, cpf])
+}
+
+model papeis {
+  id            String     @id @default(uuid()) @db.Uuid
+  nome          String     @unique @db.VarChar(50)
+  descricao     String?    @db.Text
+  criado_em     DateTime   @default(now())
+  atualizado_em DateTime   @default(now())
+  usuarios      usuarios[]
+}
+
+model usuarios {
+  id                      String                    @id @default(uuid()) @db.Uuid
+  tenant_id               String?                   @db.Uuid
+  loja_id                 String?                   @db.Uuid
+  nome                    String                    @db.VarChar(255)
+  email                   String                    @unique @db.VarChar(255)
+  senha_hash              String                    @db.Text
+  papel_id                String                    @db.Uuid
+  criado_em               DateTime                  @default(now())
+  atualizado_em           DateTime                  @default(now())
+  tenant                  tenants?                   @relation(fields: [tenant_id], references: [id])
+  loja                    lojas?                    @relation(fields: [loja_id], references: [id])
+  papel                   papeis                    @relation(fields: [papel_id], references: [id])
+  lojas_responsavel       lojas[]                   @relation("UsuarioResponsavelLojas")
+  usuario_lojas_regionais usuario_lojas_regionais[]
+  refresh_tokens          refresh_tokens[]
+  password_reset_tokens   password_reset_tokens[]
+}
+
+model lojas {
+  id                      String                    @id @default(uuid()) @db.Uuid
+  tenant_id               String                    @db.Uuid
+  nome                    String                    @db.VarChar(255)
+  cnpj                    String                    @unique @db.Char(14)
+  responsavel_id          String                    @db.Uuid
+  endereco_id             String                    @db.Uuid
+  criado_em               DateTime                  @default(now())
+  atualizado_em           DateTime                  @default(now())
+  tenant                  tenants                   @relation(fields: [tenant_id], references: [id])
+  responsavel             usuarios                  @relation("UsuarioResponsavelLojas", fields: [responsavel_id], references: [id])
+  endereco                enderecos                 @relation(fields: [endereco_id], references: [id])
+  usuarios                usuarios[]
+  usuario_lojas_regionais usuario_lojas_regionais[]
+}
+
+model usuario_lojas_regionais {
+  usuario_id String   @db.Uuid
+  loja_id    String   @db.Uuid
+  criado_em  DateTime @default(now())
+  usuario    usuarios @relation(fields: [usuario_id], references: [id])
+  loja       lojas    @relation(fields: [loja_id], references: [id])
+
+  @@id([usuario_id, loja_id])
+}
+
+model refresh_tokens {
+  id          String   @id @default(uuid()) @db.Uuid
+  usuario_id  String   @db.Uuid
+  token_hash  String   @unique @db.Text
+  expires_at  DateTime
+  is_revoked  Boolean  @default(false)
+  device_info String?  @db.Text
+  ip_address  String?  @db.Text
+  user_agent  String?  @db.Text
+  criado_em   DateTime @default(now())
+  atualizado_em DateTime @default(now())
+  
+  usuario     usuarios @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  
+  @@map("refresh_tokens")
+}
+
+model password_reset_tokens {
+  id          String    @id @default(uuid()) @db.Uuid
+  usuario_id  String    @db.Uuid
+  token_hash  String    @unique @db.Text
+  expires_at  DateTime
+  is_used     Boolean   @default(false)
+  ip_address  String?   @db.Text
+  user_agent  String?   @db.Text
+  criado_em   DateTime  @default(now())
+  usado_em    DateTime?
+  
+  usuario     usuarios  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  
+  @@map("password_reset_tokens")
+}

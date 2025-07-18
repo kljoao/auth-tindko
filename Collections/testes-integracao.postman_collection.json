@@ -1,0 +1,388 @@
+{
+	"info": {
+		"_postman_id": "testes-integracao-collection",
+		"name": "Testes de Integração",
+		"description": "Fluxos completos de teste para validação da API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Fluxo Completo - Admin Global",
+			"item": [
+				{
+					"name": "1. Login Admin Global",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@global.com\",\n  \"senha\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login do admin global para obter JWT"
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('jwt_token', response.token);",
+									"    pm.environment.set('refresh_token', response.refreshToken);",
+									"    console.log('JWT Token salvo:', response.token);",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "2. Criar Tenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"razao_social\": \"Empresa Teste LTDA\",\n  \"cnpj_matriz\": \"12345678901234\",\n  \"endereco_id\": \"{{endereco_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/tenants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tenants"
+							]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('tenant_id', response.id);",
+									"    console.log('Tenant criado:', response.id);",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "3. Criar Usuário para Tenant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tenant_id\": \"{{tenant_id}}\",\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@teste.com\",\n  \"senha\": \"123456\",\n  \"papel_id\": \"{{papel_gerente_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Fluxo - Refresh Token",
+			"item": [
+				{
+					"name": "1. Login para obter refresh token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@teste.com\",\n  \"senha\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('refresh_token_test', response.refreshToken);",
+									"    console.log('Refresh token salvo para teste');",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "2. Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token_test}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('new_jwt_token', response.token);",
+									"    console.log('Novo JWT obtido via refresh');",
+									"}"
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Fluxo - Forgot Password",
+			"item": [
+				{
+					"name": "1. Solicitar Reset de Senha",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@teste.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/forgot-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('reset_token', response.token);",
+									"    console.log('Token de reset obtido:', response.token);",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "2. Resetar Senha",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"token\": \"{{reset_token}}\",\n  \"newPassword\": \"nova123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Teste - Validação de Permissões",
+			"item": [
+				{
+					"name": "1. Login Usuário Comum",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@teste.com\",\n  \"senha\": \"nova123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('user_jwt', response.token);",
+									"    console.log('JWT de usuário comum salvo');",
+									"}"
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "2. Tentar Criar Tenant (Deve Falhar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{user_jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"razao_social\": \"Empresa Não Autorizada\",\n  \"cnpj_matriz\": \"12345678901234\",\n  \"endereco_id\": \"{{endereco_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/tenants",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"tenants"
+							]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Deve retornar 403 Forbidden', function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "endereco_id",
+			"value": "uuid_do_endereco",
+			"type": "string"
+		},
+		{
+			"key": "papel_gerente_id",
+			"value": "uuid_do_papel_gerente",
+			"type": "string"
+		}
+	]
+} 

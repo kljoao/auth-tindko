@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "papeis-api-collection",
+		"name": "Papéis API",
+		"description": "Endpoints para gerenciamento de papéis (perfis) com controle de acesso",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Criar Papel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"vendedor\",\n  \"descricao\": \"Vendedor da loja\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/papeis",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"papeis"
+					]
+				},
+				"description": "Cria um novo papel. Requer permissão: admin_global"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Papel por ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/papeis/{{papel_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"papeis",
+						"{{papel_id}}"
+					]
+				},
+				"description": "Busca um papel específico por ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todos Papéis",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/papeis",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"papeis"
+					]
+				},
+				"description": "Lista todos os papéis do sistema"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Papel",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"vendedor_senior\",\n  \"descricao\": \"Vendedor sênior da loja\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/papeis/{{papel_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"papeis",
+						"{{papel_id}}"
+					]
+				},
+				"description": "Atualiza um papel"
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Papel",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/papeis/{{papel_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"papeis",
+						"{{papel_id}}"
+					]
+				},
+				"description": "Remove um papel do sistema"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "seu_jwt_token_aqui",
+			"type": "string"
+		},
+		{
+			"key": "papel_id",
+			"value": "uuid_do_papel",
+			"type": "string"
+		}
+	]
+} 
