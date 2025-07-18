@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(helmet());
 
 app.use(cors({
-  origin: 'http://localhost:3001', // ou ['http://localhost:3001'] para múltiplas origens
+  origin: ['http://localhost:3001', 'https://dsahboard-tindko.vercel.app'], // ou ['http://localhost:3001'] para múltiplas origens
   credentials: true // necessário se você usa cookies ou Authorization header
 }));
 
